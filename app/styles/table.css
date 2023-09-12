@@ -1,9 +1,31 @@
 /* Add spacing between table columns */
 .table-header {
-    padding: 4px; /* Adjust the padding value as needed */
+    padding: 4px;
+    background-color: #f2f2f2;
+    font-weight: bold;
   }
   
   .table-cell {
     padding: 8px; /* Adjust the padding value as needed */
+	border: none;
   }
+
+  table {
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    padding: 8px;
+    text-align: left;
+  }
+  
+/* Style for buttons inside the table */
+.action-cell {
+  display: flex;
+  align-items: center; /* Vertically align items in the center */
+}
+
+.action-cell button {
+  margin-right: 5px;
+}
   

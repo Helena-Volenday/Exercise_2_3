@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import '@/app/styles/table.css';
+import '@/app/styles/form.css';
+import '@/app/styles/button.css'
 
 export default function Home() {
   const queryClient = useQueryClient();
@@ -166,7 +168,7 @@ export default function Home() {
                
 				  {selectedEmployee === employee.id && (
         <td colSpan="3" className="action-cell">
-          <button onClick={() => handleDeleteClick(employee)}>Delete</button>
+          <button onClick={() => handleDeleteClick(employee)} className="red-button">Delete</button>
           {/* Form for editing an employee */}
           <form onSubmit={(e) => handleSubmit(e, employee)}>
             <input
