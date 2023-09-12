@@ -1,0 +1,9 @@
+/* Add spacing between table columns */
+.table-header {
+    padding: 4px; /* Adjust the padding value as needed */
+  }
+  
+  .table-cell {
+    padding: 8px; /* Adjust the padding value as needed */
+  }
+  
