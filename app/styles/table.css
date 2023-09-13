@@ -1,31 +1,52 @@
 /* Add spacing between table columns */
 .table-header {
-    padding: 4px;
-    background-color: #f2f2f2;
-    font-weight: bold;
-  }
-  
-  .table-cell {
-    padding: 8px; /* Adjust the padding value as needed */
-	border: none;
-  }
+	padding: 4px;
+	background-color: #f2f2f2;
+	font-weight: bold;
+}
 
-  table {
-    border-collapse: collapse;
-  }
-  
-  th, td {
-    padding: 8px;
-    text-align: left;
-  }
-  
+.table-cell {
+	padding: 8px; /* Adjust the padding value as needed */
+	border: none;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+th,
+td {
+	padding: 8px;
+	text-align: left;
+}
+
 /* Style for buttons inside the table */
 .action-cell {
-  display: flex;
-  align-items: center; /* Vertically align items in the center */
+	display: flex;
+	flex-wrap: wrap; /* Wrap the buttons inside the cell */
+	align-items: center; /* Vertically align items in the center */
 }
 
 .action-cell button {
-  margin-right: 5px;
+	margin-right: 5px;
+	margin-bottom: 5px;
 }
-  
+
+/* Media query for screens smaller than a certain width (e.g., 768px) */
+@media (max-width: 768px) {
+	/* Restyle the table for smaller screens */
+	.table-header,
+	.table-cell,
+	th,
+	td {
+		padding: 6px; /* Adjust the padding for smaller screens */
+	}
+
+	/* Shows the action cell on the next row */
+	.action-cell {
+		flex-direction: row;
+	}
+	.action-cell button {
+		margin-right: 0;
+	}
+}

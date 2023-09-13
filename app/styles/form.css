@@ -1,18 +1,48 @@
 form {
-    margin: 10px 0;
-  }
-  
-  input {
-    margin: 5px;
-    padding: 5px;
-    border: 1px solid #ccc;
-  }
-  
-  button {
-    margin: 5px;
-    padding: 5px 10px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-  }
+	margin: 10px 0;
+}
+
+input {
+	margin: 5px;
+	padding: 5px;
+	border: 1px solid #ccc;
+}
+
+.input-container {
+	display: flex;
+	flex-direction: column;
+}
+
+button {
+	margin: 5px;
+	padding: 5px 10px;
+	background-color: #3e5369;
+	color: #fff;
+	border: none;
+	cursor: pointer;
+}
+
+.error-input {
+	border: 2px solid red; /* Red border for the input */
+}
+
+.error-message {
+	color: red; /* Red text for the error message */
+}
+
+/* Disable the button when the date is invalid */
+button[disabled] {
+	background-color: gray;
+	cursor: not-allowed;
+}
+
+@media (min-width: 768px) {
+	.input-container {
+		flex-direction: row;
+		align-items: center;
+	}
+
+	.input-container input {
+		margin-right: 10px;
+	}
+}
