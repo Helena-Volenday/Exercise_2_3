@@ -33,7 +33,6 @@ export default function Home() {
 		}
 	});
 
-	//const [formData, setFormData] = useState({ firstName: '', lastName: '', birthday: '' });
 	const [selectedEmployee, setSelectedEmployee] = useState(null);
 	const [addEmployeeFormData, setAddEmployeeFormData] = useState({
 		firstName: '',
@@ -260,14 +259,12 @@ export default function Home() {
 	);
 }
 
-// Define your data fetching function
 const fetchEmployees = async () => {
-	const res = await fetch('/api/employees');
+	const res = await fetch('/api/employees/read');
 	const data = await res.json();
 	return data;
 };
 
-// Define your mutation function
 const createEmployee = async formData => {
 	await fetch('/api/employees/create', {
 		method: 'POST',
@@ -277,7 +274,7 @@ const createEmployee = async formData => {
 };
 
 const updateEmployee = async ({ employee, ...newEmployeeData }) => {
-	/** if on of the newEmployee data is blank, use the employee field instead*/
+	/** if one of the newEmployee data is blank, use the employee field instead*/
 	newEmployeeData.id = employee.id;
 	if (newEmployeeData.firstName === '') {
 		newEmployeeData.firstName = employee.first_name;

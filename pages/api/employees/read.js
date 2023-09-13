@@ -1,4 +1,3 @@
-// pages/api/employees/index.js
 import db from '../../../db';
 
 export default async (req, res) => {
