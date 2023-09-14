@@ -10,7 +10,12 @@ import '../app/styles/table.css';
 
 import * as yup from 'yup';
 
-const nameSchema = yup.string().matches(/^[a-zA-Z]+$/, 'Name should contain only letters');
+const nameSchema = yup
+	.string()
+	.required('First name is required')
+	.min(2, 'First name must be at least 2 characters')
+	.matches(/^[a-zA-Z]+$/, 'Name should contain only letters');
+const dateSchema = yup.date().max(new Date(), 'Date cannot be in the future').required('Date is required');
 
 export default function Home() {
 	const queryClient = useQueryClient();
@@ -51,39 +56,70 @@ export default function Home() {
 		birthday: ''
 	});
 
-	const handleInputChange = e => {
+	const handleAddInputChange = e => {
 		const { name, value } = e.target;
 
 		// Update the corresponding form data state
-		if (selectedEmployee) {
-			setUpdateEmployeeFormData({ ...updateEmployeeFormData, [name]: value });
-		} else {
-			setAddEmployeeFormData({ ...addEmployeeFormData, [name]: value });
-		}
+		setAddEmployeeFormData({ ...addEmployeeFormData, [name]: value });
 
-		// Validate the date input
 		if (name === 'birthday') {
-			const selectedDate = new Date(value);
-			const currentDate = new Date();
-			const validDate = selectedDate <= currentDate;
-
-			// Update the corresponding error state and button state
-			setUpdateDateError(!validDate && selectedEmployee);
-			setAddDateError(!validDate && !selectedEmployee);
-			setUpdateDisableButton(!validDate && selectedEmployee);
+			const isValidDate = dateSchema.isValidSync(value);
+			setAddDateError(!isValidDate);
 		}
-
-		// Check if any of the fields are empty
-		const isDateEmpty = addEmployeeFormData.birthday === '';
 
 		// Validate first and last name with yup
-		const isNameValid =
-			nameSchema.isValidSync(addEmployeeFormData.firstName) &&
-			nameSchema.isValidSync(addEmployeeFormData.lastName);
+		if (name === 'firstName' || name === 'lastName') {
+			const isValidName = nameSchema.isValidSync(value);
+			const isValidDate = dateSchema.isValidSync(addEmployeeFormData.birthday);
+			if (name === 'firstName') {
+				// Only update the button state when it's the first name input
+				setAddDisableButton(!isValidName || !isValidDate || addEmployeeFormData.lastName === '');
+			} else {
+				// Update the button state when it's the last name input
+				setAddDisableButton(!isValidName || !isValidDate || addEmployeeFormData.firstName === '');
+			}
+		} else {
+			// Update the button state when it's the birthday input
+			setAddDisableButton(
+				!dateSchema.isValidSync(addEmployeeFormData.birthday) ||
+					!nameSchema.isValidSync(addEmployeeFormData.firstName) ||
+					!nameSchema.isValidSync(addEmployeeFormData.lastName)
+			);
+		}
+	};
 
-		// Enable or disable the Add Employee button based on the empty fields, and the legal characters
-		setUpdateDisableButton(isDateEmpty || !isNameValid);
-		setAddDisableButton(isDateEmpty || !isNameValid);
+	const handleUpdateInputChange = e => {
+		const { name, value } = e.target;
+
+		// Update the corresponding form data state
+		setUpdateEmployeeFormData({ ...updateEmployeeFormData, [name]: value });
+
+		if (name === 'birthday') {
+			// Validate the date input with yup (required and max today) and update the corresponding error state
+			const isValidDate = dateSchema.isValidSync(value);
+			setUpdateDateError(!isValidDate);
+		}
+
+		// Validate first and last name with yup
+		if (name === 'firstName' || name === 'lastName') {
+			const isValidName = nameSchema.isValidSync(value);
+			const isValidDate = dateSchema.isValidSync(updateEmployeeFormData.birthday);
+			// Update the button state based on both first and last names being valid
+			if (name === 'firstName') {
+				// Only update the button state when it's the first name input
+				setUpdateDisableButton(!isValidName || !isValidDate || updateEmployeeFormData.lastName === '');
+			} else {
+				// Update the button state when it's the last name input
+				setUpdateDisableButton(!isValidName || !isValidDate || updateEmployeeFormData.firstName === '');
+			}
+		} else {
+			// Update the button state when it's the birthday input
+			setUpdateDisableButton(
+				!dateSchema.isValidSync(updateEmployeeFormData.birthday) ||
+					!nameSchema.isValidSync(updateEmployeeFormData.firstName) ||
+					!nameSchema.isValidSync(updateEmployeeFormData.lastName)
+			);
+		}
 	};
 
 	const handleSubmit = (e, employee) => {
@@ -115,8 +151,21 @@ export default function Home() {
 		// Toggle the selected employee
 		if (selectedEmployee === employeeId) {
 			setSelectedEmployee(null);
+			// clear the update form data
+			setUpdateEmployeeFormData({
+				firstName: '',
+				lastName: '',
+				birthday: ''
+			});
 		} else {
 			setSelectedEmployee(employeeId);
+			// Put all the employee's data (first and last name and birthdate) in the update form
+			const employee = employees.find(employee => employee.id === employeeId);
+			setUpdateEmployeeFormData({
+				firstName: employee.first_name,
+				lastName: employee.last_name,
+				birthday: employee.birthday
+			});
 		}
 	};
 
@@ -143,14 +192,14 @@ export default function Home() {
 						name="firstName"
 						placeholder="First Name"
 						value={addEmployeeFormData.firstName}
-						onInput={handleInputChange}
+						onChange={handleAddInputChange}
 					/>
 					<input
 						type="text"
 						name="lastName"
 						placeholder="Last Name"
 						value={addEmployeeFormData.lastName}
-						onInput={handleInputChange}
+						onChange={handleAddInputChange}
 					/>
 				</div>
 				<div className="input-container">
@@ -158,7 +207,7 @@ export default function Home() {
 						type="date"
 						name="birthday"
 						value={addEmployeeFormData.birthday}
-						onChange={handleInputChange}
+						onChange={handleAddInputChange}
 						className={addDateError ? 'error-input' : ''}
 					/>
 					{addDateError && <p className="error-message">Ivalid date</p>}
@@ -220,13 +269,13 @@ export default function Home() {
 													type="text"
 													name="firstName"
 													value={updateEmployeeFormData.firstName || employee.first_name}
-													onInput={handleInputChange}
+													onChange={handleUpdateInputChange}
 												/>
 												<input
 													type="text"
 													name="lastName"
 													value={updateEmployeeFormData.lastName || employee.last_name}
-													onInput={handleInputChange}
+													onChange={handleUpdateInputChange}
 												/>
 											</div>
 											<div className="input-container">
@@ -238,7 +287,7 @@ export default function Home() {
 														(employee && employee.birthday) ||
 														''
 													}
-													onChange={handleInputChange}
+													onChange={handleUpdateInputChange}
 													className={updateDateError ? 'error-input' : ''}
 												/>
 												<button type="submit" disabled={updateDisableButton}>
