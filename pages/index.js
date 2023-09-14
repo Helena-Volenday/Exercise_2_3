@@ -10,6 +10,8 @@ import '../app/styles/table.css';
 
 import * as yup from 'yup';
 
+import { Button, Typography } from 'antd';
+
 const nameSchema = yup
 	.string()
 	.required('First name is required')
@@ -183,7 +185,7 @@ export default function Home() {
 
 	return (
 		<div className="container">
-			<h1>Employee Management</h1>
+			<Typography.Title>Employee Management</Typography.Title>
 
 			<form onSubmit={e => handleSubmit(e)}>
 				<div className="input-container">
@@ -211,16 +213,16 @@ export default function Home() {
 						className={addDateError ? 'error-input' : ''}
 					/>
 					{addDateError && <p className="error-message">Ivalid date</p>}
-					<button type="submit" disabled={addDisableButton}>
+					<Button type="primary" disabled={addDisableButton} onClick={e => handleSubmit(e)}>
 						Add Employee
-					</button>
+					</Button>
 				</div>
 			</form>
 
 			<div style={{ margin: '20px 0' }}></div>
 
 			{/* Display the employees list */}
-			<h2>Employees</h2>
+			<Typography.Title level={2}>Employees</Typography.Title>
 
 			<table>
 				<thead>
@@ -252,16 +254,16 @@ export default function Home() {
 									{new Date(employee.birthday).toLocaleDateString()} ({employee.age})
 								</td>
 								<td className="table-cell">
-									<button onClick={() => handleEmployeeClick(employee.id)}>
+									<Button type="default" onClick={() => handleEmployeeClick(employee.id)}>
 										{selectedEmployee === employee.id ? 'Hide' : 'Show'} Actions
-									</button>
+									</Button>
 								</td>
 
 								{selectedEmployee === employee.id && (
 									<td className="action-cell">
-										<button onClick={() => handleDeleteClick(employee)} className="red-button">
+										<Button type="primary" danger onClick={() => handleDeleteClick(employee)}>
 											Delete
-										</button>
+										</Button>
 										{/* Form for editing an employee */}
 										<form onSubmit={e => handleSubmit(e, employee)}>
 											<div className="input-container">
@@ -290,9 +292,12 @@ export default function Home() {
 													onChange={handleUpdateInputChange}
 													className={updateDateError ? 'error-input' : ''}
 												/>
-												<button type="submit" disabled={updateDisableButton}>
+												<Button
+													type="primary"
+													disabled={updateDisableButton}
+													onClick={e => handleSubmit(e, employee)}>
 													Update Employee
-												</button>
+												</Button>
 											</div>
 										</form>
 									</td>

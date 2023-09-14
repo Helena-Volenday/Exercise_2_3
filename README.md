@@ -79,6 +79,6 @@ The information for the database connection is stored in an `.env.local` file.
 
 ### About the appearance
 
-Without considering the basic appereance,for mobile devices' size, I'm working on trying to show the Delete and Update actions underneath the user. Otherwise, the user have to scroll to the right to see them.
+Basic use of ant design.
 
 I decided to keep all the functionallities on the same page, as it is easier to use for the end user. (They doesn't have to keep jumping between links).
