@@ -6,8 +6,7 @@ export default async (req, res) => {
 	}
 
 	try {
-		const query =
-			'SELECT id, first_name, last_name, DATE_FORMAT(birthday, "%Y-%m-%d") as birthday, age FROM employees';
+		const query = 'SELECT * FROM employees';
 		const [rows] = await db.promise().query(query);
 		res.status(200).json(rows);
 	} catch (error) {
