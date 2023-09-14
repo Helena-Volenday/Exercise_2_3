@@ -2,10 +2,11 @@
 
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
-import '@/app/styles/table.css';
-import '@/app/styles/form.css';
-import '@/app/styles/button.css';
-import '@/app/styles/header.css';
+/** Import the css files */
+import '../app/styles/button.css';
+import '../app/styles/form.css';
+import '../app/styles/header.css';
+import '../app/styles/table.css';
 
 export default function Home() {
 	const queryClient = useQueryClient();
