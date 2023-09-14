@@ -61,26 +61,12 @@ export default function Home() {
 		if (name === 'birthday') {
 			const selectedDate = new Date(value);
 			const currentDate = new Date();
+			const validDate = selectedDate <= currentDate;
 
-			if (selectedDate > currentDate) {
-				// Update the corresponding error state and button state
-				if (selectedEmployee) {
-					setUpdateDateError(true);
-					setUpdateDisableButton(true);
-				} else {
-					setAddDateError(true);
-					setAddDisableButton(true);
-				}
-			} else {
-				// Update the corresponding error state and button state
-				if (selectedEmployee) {
-					setUpdateDateError(false);
-					setUpdateDisableButton(false);
-				} else {
-					setAddDateError(false);
-					setAddDisableButton(false);
-				}
-			}
+			// Update the corresponding error state and button state
+			setUpdateDateError(!validDate && selectedEmployee);
+			setAddDateError(!validDate && !selectedEmployee);
+			setUpdateDisableButton(!validDate && selectedEmployee);
 		}
 
 		// Check if any of the fields are empty
