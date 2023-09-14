@@ -8,6 +8,10 @@ import '../app/styles/form.css';
 import '../app/styles/header.css';
 import '../app/styles/table.css';
 
+import * as yup from 'yup';
+
+const nameSchema = yup.string().matches(/^[a-zA-Z]+$/, 'Name should contain only letters');
+
 export default function Home() {
 	const queryClient = useQueryClient();
 	const { isLoading, error, data: employees } = useQuery('employees', fetchEmployees);
@@ -70,13 +74,16 @@ export default function Home() {
 		}
 
 		// Check if any of the fields are empty
-		const isAnyFieldEmpty =
-			addEmployeeFormData.firstName === '' ||
-			addEmployeeFormData.lastName === '' ||
-			addEmployeeFormData.birthday === '';
+		const isDateEmpty = addEmployeeFormData.birthday === '';
 
-		// Enable or disable the Add Employee button based on the empty fields
-		setAddDisableButton(isAnyFieldEmpty);
+		// Validate first and last name with yup
+		const isNameValid =
+			nameSchema.isValidSync(addEmployeeFormData.firstName) &&
+			nameSchema.isValidSync(addEmployeeFormData.lastName);
+
+		// Enable or disable the Add Employee button based on the empty fields, and the legal characters
+		setUpdateDisableButton(isDateEmpty || !isNameValid);
+		setAddDisableButton(isDateEmpty || !isNameValid);
 	};
 
 	const handleSubmit = (e, employee) => {
@@ -213,7 +220,7 @@ export default function Home() {
 													type="text"
 													name="firstName"
 													value={updateEmployeeFormData.firstName || employee.first_name}
-													onChange={handleInputChange}
+													onInput={handleInputChange}
 												/>
 												<input
 													type="text"
