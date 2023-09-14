@@ -143,14 +143,14 @@ export default function Home() {
 						name="firstName"
 						placeholder="First Name"
 						value={addEmployeeFormData.firstName}
-						onChange={handleInputChange}
+						onInput={handleInputChange}
 					/>
 					<input
 						type="text"
 						name="lastName"
 						placeholder="Last Name"
 						value={addEmployeeFormData.lastName}
-						onChange={handleInputChange}
+						onInput={handleInputChange}
 					/>
 				</div>
 				<div className="input-container">
@@ -226,14 +226,18 @@ export default function Home() {
 													type="text"
 													name="lastName"
 													value={updateEmployeeFormData.lastName || employee.last_name}
-													onChange={handleInputChange}
+													onInput={handleInputChange}
 												/>
 											</div>
 											<div className="input-container">
 												<input
 													type="date"
 													name="birthday"
-													value={updateEmployeeFormData.birthday || employee.birthday}
+													value={
+														updateEmployeeFormData.birthday ||
+														(employee && employee.birthday) ||
+														''
+													}
 													onChange={handleInputChange}
 													className={updateDateError ? 'error-input' : ''}
 												/>
@@ -256,7 +260,14 @@ export default function Home() {
 const fetchEmployees = async () => {
 	const res = await fetch('/api/employees/read');
 	const data = await res.json();
-	return data;
+
+	// Format the birthdate for each employee
+	const formattedData = data.map(employee => ({
+		...employee,
+		birthday: new Date(employee.birthday).toISOString().split('T')[0] // Format as 'YYYY-MM-DD'
+	}));
+
+	return formattedData;
 };
 
 const createEmployee = async formData => {
